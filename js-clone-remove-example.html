@@ -1,0 +1,76 @@
+  <div class="parent-container">
+    <h1><button class="add button-primary">Add New Section</button></h1>
+
+    <!-- . -->
+    <div class="form-container to-clone" style="margin:10px 0;width: 80%;position: relative;clear: both; border: 1px dotted #ccc;background-color: #eee;padding:10px;">
+        <div class="form-row">
+            <label>Label</label>
+            <input type="text" name="item-1" placeholder="Enter name/id" class="regular-text">
+        </div>
+        <div class="form-row">
+            <label>Label 2</label>
+            <input type="text" name="item-2" placeholder="Enter label" class="regular-text">
+        </div>
+        <div class="form-row">
+            <label>Type</label>
+            <select name="item-3">
+                <option value="option-1">Option 1</option>
+                <option value="option-2">Option 2</option>
+                <option value="option-3">Option 3</option>
+            </select>
+        </div>
+    </div>
+    <!-- ./ -->
+</div>
+<div class="wrapper">
+    <?php submit_button(); ?>
+</div>
+
+<script>
+    function clone_remove_html(to_clone, parent_container_class) {
+        var parentContainer = document.querySelector('.' + parent_container_class);
+
+        // Create "Add" button once inside the parent container
+        var addButton = parentContainer.querySelector('.add');
+
+        addButton.addEventListener('click', function() {
+            var newContainer = parentContainer.querySelector('.' + to_clone).cloneNode(true);
+            newContainer.querySelector('input').value = "";
+
+            // Remove previous remove button from the new container, if exists
+            var existingRemoveButton = newContainer.querySelector('.removeButton');
+            if (existingRemoveButton) {
+                existingRemoveButton.remove();
+            }
+
+            // Create and append new remove button
+            var removeButton = document.createElement('button');
+            removeButton.textContent = 'Remove';
+            removeButton.classList.add('removeButton');
+            removeButton.addEventListener('click', function() {
+                newContainer.remove();
+            });
+            newContainer.appendChild(removeButton);
+
+            // Append cloned container to its parent
+            parentContainer.appendChild(newContainer);
+        });
+
+        // Add "Remove" buttons to existing containers, except the first one
+        var containers = parentContainer.querySelectorAll('.' + to_clone);
+        containers.forEach(function(container, index) {
+            if (index > 0) {
+                var removeButton = document.createElement('button');
+                removeButton.textContent = 'Remove';
+                removeButton.classList.add('removeButton');
+                removeButton.addEventListener('click', function() {
+                    container.remove();
+                });
+                container.appendChild(removeButton);
+            }
+        });
+    }
+
+    // Call the function with the class name of the section to clone and parent container class
+    clone_remove_html('to-clone', 'parent-container');
+</script>
